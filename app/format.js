@@ -1,0 +1,10 @@
+export const esc = (s) => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+export const toStr = (v, fb='') => v==null ? fb : Array.isArray(v) ? v.map(x=>toStr(x)).filter(Boolean).join(', ') : (typeof v==='object' ? fb : String(v));
+export const toArr = (v) => v==null ? [] : Array.isArray(v) ? v : [v];
+export const toNum = (v, fb=0) => { const n = typeof v==='string' ? parseFloat(v.replace(/[^0-9.\-]/g,'')) : Number(v); return isFinite(n) ? n : fb; };
+export const toObj = (v) => v && typeof v==='object' && !Array.isArray(v) ? v : {};
+export const money = (n) => '$' + toNum(n).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+export const num = (n) => Math.trunc(toNum(n)).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+export const timeLeft = (d) => { const t = new Date(toStr(d)).getTime(); if (!isFinite(t)) return ''; const diff = t - Date.now(); if (diff<=0) return 'Ended'; const mins=Math.floor(diff/60000), dd=Math.floor(mins/1440), hh=Math.floor((mins%1440)/60), mm=mins%60; return dd>0 ? `${dd}d ${hh}h` : hh>0 ? `${hh}h ${mm}m` : `${mm}m`; };
+export const dateStr = (iso) => { const d = new Date(toStr(iso)); return isNaN(d) ? '' : d.toISOString().slice(0,10); };
+export const pct = (micro) => { const v = toNum(micro, NaN); return isFinite(v) ? (v/10000).toFixed(1)+'%' : '0.0%'; };
